@@ -20,6 +20,9 @@ DrivetrainDefaultCommand::DrivetrainDefaultCommand(Drivetrain &drive, frc::Joyst
 void DrivetrainDefaultCommand::Initialize()
 {
   // RobotContainer::drive.GetCurrentCommand();
+  m_xSpeedSRLimiter.Reset(0.0);
+  m_ySpeedSRLimiter.Reset(0.0);
+  m_rotSpeedSRLimiter.Reset(0.0);
 }
 
 // Called repeatedly when this Command is scheduled to run
@@ -29,13 +32,15 @@ void DrivetrainDefaultCommand::Execute()
   double y = StickLinear::Linearize(m_driverStick->GetRawAxis(1), kRobot::yStickMin, kRobot::yStickMax, -0.09);
   double rot = StickLinear::Linearize(m_driverStick->GetRawAxis(3), kRobot::rotStickMin, kRobot::rotStickMax, -0.07);
 
-  units::meters_per_second_t xSpeed = -m_xSpeedLimiter.Calculate(frc::ApplyDeadband(x, 0.02) * kSwerve::driveMaxSpeed);
-  units::meters_per_second_t ySpeed = -m_ySpeedLimiter.Calculate(frc::ApplyDeadband(y, 0.02) * kSwerve::driveMaxSpeed);
-  units::radians_per_second_t rotRate = -m_rotSpeedLimiter.Calculate(frc::ApplyDeadband(rot, 0.02) * kSwerve::robotMaxAngularVelocity);
+  units::meters_per_second_t xSpeed = -m_xSpeedSRLimiter.Calculate(frc::ApplyDeadband(x, 0.02) * kSwerve::driveMaxSpeed);
+  units::meters_per_second_t ySpeed = -m_ySpeedSRLimiter.Calculate(frc::ApplyDeadband(y, 0.02) * kSwerve::driveMaxSpeed);
+  units::radians_per_second_t rotRate = -m_rotSpeedSRLimiter.Calculate(frc::ApplyDeadband(rot, 0.02) * kSwerve::robotMaxAngularVelocity);
 
   frc::SmartDashboard::PutNumber("xSpeed", xSpeed.value());
   frc::SmartDashboard::PutNumber("ySpeed", ySpeed.value());
   frc::SmartDashboard::PutNumber("rot", rotRate.value());
+
+//  m_drivetrain->Drive(xSpeed, ySpeed, rotRate, true);
   m_drivetrain->Drive(0_mps, 0_mps, 0_rad_per_s, true);
 }
 

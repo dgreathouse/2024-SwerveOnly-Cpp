@@ -30,9 +30,7 @@ void Robot::RobotPeriodic()
   frc::SmartDashboard::PutNumber("Y_Stick", m_container.driverStick.GetRawAxis(1));
   frc::SmartDashboard::PutNumber("Rot_Stick", m_container.driverStick.GetRawAxis(3));
   
-  frc::SmartDashboard::PutNumber("X_StickLin", StickLinear::Linearize(m_container.driverStick.GetRawAxis(0), kRobot::xStickMin, kRobot::xStickMax, xOff));
-  frc::SmartDashboard::PutNumber("Y_StickLin", StickLinear::Linearize(m_container.driverStick.GetRawAxis(1), kRobot::yStickMin, kRobot::yStickMax, yOff));
-  frc::SmartDashboard::PutNumber("Rot_StickLin", StickLinear::Linearize(m_container.driverStick.GetRawAxis(3), kRobot::rotStickMin, kRobot::rotStickMax, rotOff));
+
 }
 
 /**
