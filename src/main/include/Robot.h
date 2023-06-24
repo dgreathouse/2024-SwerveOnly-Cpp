@@ -13,6 +13,9 @@
 
 class Robot : public frc::TimedRobot {
  public:
+ double xOff =0.0;
+ double yOff = 0.0;
+ double rotOff = 0.0;
   Robot() : frc::TimedRobot(kRobot::Period) {}
   void RobotInit() override;
   void RobotPeriodic() override;

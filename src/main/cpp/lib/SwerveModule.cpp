@@ -25,7 +25,10 @@ SwerveModule::SwerveModule( std::string _name,
     steerMotor.SetInverted(_steerReversed);
     
 }
-
+units::velocity::meters_per_second_t SwerveModule::GetDriveVelocity()
+{
+    return units::velocity::meters_per_second_t{driveMotor.GetVelocity().GetValue().value() * kSwerve::driveMotor_MpT};
+}
 frc::SwerveModuleState SwerveModule::GetState() {
 
     return frc::SwerveModuleState{units::meters_per_second_t{driveMotor.GetVelocity().GetValue().value() * kSwerve::driveMotor_MpT},    // tps * mpt = mps of drive motor
@@ -63,14 +66,21 @@ void SwerveModule::SetDesiredState(const frc::SwerveModuleState& desiredState)
     units::voltage::volt_t steerFeedForward = m_steerFeedforward.Calculate(m_steerPIDController.GetSetpoint().velocity);
 
     // Set the drive voltage
-    driveMotor.SetVoltage(driveFeedForward + driveOutput);
+   // driveMotor.SetVoltage(driveFeedForward + driveOutput);
+   
+    driveMotor.SetControl(driveVoltageOut.WithEnableFOC(true).WithOverrideBrakeDurNeutral(false).WithOutput(driveFeedForward + driveOutput));
 
     // Set the steer voltage
-    steerMotor.SetVoltage(steerFeedForward + steerOutput);
+    //steerMotor.SetVoltage(steerFeedForward + steerOutput);
+    //steerMotor.SetControl(steerVoltageOut.WithEnableFOC(true).WithOverrideBrakeDurNeutral(false).WithOutput(steerFeedForward + steerOutput));
+
     frc::SmartDashboard::PutNumber(name + "_DriveFF", driveFeedForward.value());
     frc::SmartDashboard::PutNumber(name + "_SteerFF", steerFeedForward.value());
     frc::SmartDashboard::PutNumber(name + "_DrivePID", driveOutput.value());
     frc::SmartDashboard::PutNumber(name + "_SteerPID", steerOutput.value());
+    frc::SmartDashboard::PutNumber(name + "_DriveVel", GetDriveVelocity().value());
+    frc::SmartDashboard::PutNumber(name + "_DriveStateVel", state.speed.value());
+    frc::SmartDashboard::PutNumber(name + "_SteerEnc", steerEncoder.GetPosition().GetValue().value() * 360.0);
 
 }
 units::voltage::volt_t SwerveModule::GetSupplyVoltage(){

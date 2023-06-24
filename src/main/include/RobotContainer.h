@@ -27,6 +27,7 @@ public:
   frc::Joystick driverStick{0};
   frc::SendableChooser<frc2::Command*> m_autoChooser;
   frc2::Command* GetAutonomousCommand();
+  
 private:
   // Replace with CommandPS4Controller or CommandJoystick if needed
   // frc2::CommandXboxController m_driverController{
@@ -34,8 +35,8 @@ private:
 
   // The robot's subsystems are defined here...
   
-  Drivetrain drivetrain;
-  AutoDoNothing m_autoDoNothing;
+  Drivetrain drivetrain{};
+  AutoDoNothing m_autoDoNothing{};
   AutoTest m_autoTest{drivetrain};
 
   void ConfigureBindings();

@@ -43,5 +43,15 @@ namespace kSwerve {
 }
 namespace kRobot {
     constexpr units::voltage::volt_t maxBatteryVoltage{12.5};
-    constexpr units::time::millisecond_t Period = 10_ms;
+    constexpr units::time::millisecond_t Period = 20_ms;
+
+    constexpr double xStickMax = 0.866;
+    constexpr double xStickMin = -0.82;
+
+    constexpr double yStickMax = 0.646;
+    constexpr double yStickMin = -0.7;
+
+    constexpr double rotStickMax = 0.811;
+    constexpr double rotStickMin = -0.875;
+
 }

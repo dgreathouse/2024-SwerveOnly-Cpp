@@ -29,6 +29,7 @@ class SwerveModule {
   frc::SwerveModuleState GetState();
   frc::SwerveModulePosition GetPostition();
   units::voltage::volt_t GetSupplyVoltage();
+  units::velocity::meters_per_second_t GetDriveVelocity();
   void SetDesiredState(const frc::SwerveModuleState& state);
 
 
@@ -42,15 +43,17 @@ class SwerveModule {
   ctre::phoenixpro::hardware::TalonFX steerMotor;
   ctre::phoenixpro::hardware::CANcoder steerEncoder;
   units::degree_t steerOffset;
+  ctre::phoenixpro::controls::VoltageOut driveVoltageOut{0_V};
+  ctre::phoenixpro::controls::VoltageOut steerVoltageOut{0_V};
 
-  frc::PIDController m_drivePIDController{1,0,0};
+  frc::PIDController m_drivePIDController{0.0,0.0,0};
   frc::ProfiledPIDController<units::radians> m_steerPIDController{
-    1.0,
+    0.10,
     0.0,
     0.0,
     {kModuleMaxAngularVelocity,kModuleMaxAngularAcceleration},
     kRobot::Period
   };
-  frc::SimpleMotorFeedforward<units::meters> m_driveFeedforward{1_V, 3_V / 1_mps};
-  frc::SimpleMotorFeedforward<units::radians> m_steerFeedforward{1_V, 0.5_V / 1_rad_per_s};
+  frc::SimpleMotorFeedforward<units::meters> m_driveFeedforward{0_V, 4.3_V / 1.5_mps};
+  frc::SimpleMotorFeedforward<units::radians> m_steerFeedforward{0_V, 0.5_V / 1_rad_per_s};
 };

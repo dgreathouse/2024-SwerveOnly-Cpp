@@ -9,17 +9,15 @@
 
 
   Drivetrain::Drivetrain() 
-   :  fl{"fl",1,1,1,false,false,130.0_deg},
-      fr{"fr",1,1,1,false,false,130.0_deg},
-      b{"b",1,1,1,false,false,130.0_deg},
-      gyro{1,"CANivore"},
+   :  fl{"fl",13,23,3,true,false,151.857_deg},
+      fr{"fr",12,22,2,true,true,286.523_deg},
+      b{"b",11,21,1,true,false,36.47_deg},
+      gyro{5,"CANivore"},
       m_kinematics{m_frontLeftLocation, m_frontRightLocation, m_backLocation},
       m_odometery{ m_kinematics, gyro.GetRotation2d(), {fl.GetPostition(), fr.GetPostition(), b.GetPostition()}}
   {
       while(!BusActive()){}
       gyro.Reset();
-    
-    
   }
 
 // This method will be called once per scheduler run

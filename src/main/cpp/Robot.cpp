@@ -6,7 +6,12 @@
 
 #include <frc2/command/CommandScheduler.h>
 #include <frc/smartdashboard/SmartDashboard.h>
-void Robot::RobotInit() {}
+#include <lib/StickLinear.h>
+void Robot::RobotInit() {
+    xOff = m_container.driverStick.GetRawAxis(0);
+    yOff = m_container.driverStick.GetRawAxis(1);
+    rotOff = m_container.driverStick.GetRawAxis(3);
+}
 
 /**
  * This function is called every 20 ms, no matter the mode. Use
@@ -23,7 +28,11 @@ void Robot::RobotPeriodic()
   frc2::CommandScheduler::GetInstance().Run();
   frc::SmartDashboard::PutNumber("X_Stick", m_container.driverStick.GetRawAxis(0));
   frc::SmartDashboard::PutNumber("Y_Stick", m_container.driverStick.GetRawAxis(1));
-  frc::SmartDashboard::PutNumber("Rot_Stick", m_container.driverStick.GetRawAxis(2));
+  frc::SmartDashboard::PutNumber("Rot_Stick", m_container.driverStick.GetRawAxis(3));
+  
+  frc::SmartDashboard::PutNumber("X_StickLin", StickLinear::Linearize(m_container.driverStick.GetRawAxis(0), kRobot::xStickMin, kRobot::xStickMax, xOff));
+  frc::SmartDashboard::PutNumber("Y_StickLin", StickLinear::Linearize(m_container.driverStick.GetRawAxis(1), kRobot::yStickMin, kRobot::yStickMax, yOff));
+  frc::SmartDashboard::PutNumber("Rot_StickLin", StickLinear::Linearize(m_container.driverStick.GetRawAxis(3), kRobot::rotStickMin, kRobot::rotStickMax, rotOff));
 }
 
 /**
