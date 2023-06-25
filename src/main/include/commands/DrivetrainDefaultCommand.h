@@ -33,12 +33,11 @@ class DrivetrainDefaultCommand
  private:
  Drivetrain* m_drivetrain;
  frc::Joystick* m_driverStick;
- units::dimensionless::scalar_t speedSRLimit{kSwerve::driveMaxSpeed.value()/2.0};
- units::dimensionless::scalar_t rotationSRLimit{kSwerve::robotMaxAngularVelocity.value() /2.0};
 
- frc::SlewRateLimiter<units::scalar> m_xSpeedSRLimiter{speedSRLimit};
- frc::SlewRateLimiter<units::scalar> m_ySpeedSRLimiter{speedSRLimit};
- frc::SlewRateLimiter<units::scalar> m_rotSpeedSRLimiter{rotationSRLimit};
+
+ frc::SlewRateLimiter<units::scalar> m_xSpeedSRLimiter{kSwerve::driveMaxSpeed.value()/2.0_s};
+ frc::SlewRateLimiter<units::scalar> m_ySpeedSRLimiter{kSwerve::driveMaxSpeed.value()/2.0_s};
+ frc::SlewRateLimiter<units::scalar> m_rotSpeedSRLimiter{kSwerve::robotMaxAngularVelocity.value() /2.0_s};
 
 
 };
