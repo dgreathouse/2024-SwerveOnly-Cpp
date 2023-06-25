@@ -42,16 +42,13 @@ void Drivetrain::Drive(units::meters_per_second_t _xSpeed, units::meters_per_sec
    fl.SetDesiredState(flState);
    fr.SetDesiredState(frState);
    b.SetDesiredState(bState);
-
-   frc::SmartDashboard::PutNumber("X_Speed", _xSpeed.value());
-   frc::SmartDashboard::PutNumber("Y_Speed", _ySpeed.value());
-   frc::SmartDashboard::PutNumber("Rot_Speed", _rotSpeed.value());
-   
+ 
 }
 void Drivetrain::UpdateOdometry() {
    m_odometery.Update(gyro.GetRotation2d(),{fl.GetPostition(), fr.GetPostition(), b.GetPostition()});
    frc::SmartDashboard::PutNumber("X_Pose", m_odometery.GetPose().X().value());
    frc::SmartDashboard::PutNumber("Y_Pose", m_odometery.GetPose().Y().value());
+   frc::SmartDashboard::PutNumber("RobotAngle", gyro.GetYaw().GetValue().value());
 
 }
 frc::Pose2d Drivetrain::GetRobotPose(){

@@ -79,9 +79,10 @@ void SwerveModule::SetDesiredState(const frc::SwerveModuleState& desiredState)
     frc::SmartDashboard::PutNumber(name + "_DrivePID", driveOutput.value());
     frc::SmartDashboard::PutNumber(name + "_SteerPID", steerOutput.value());
     frc::SmartDashboard::PutNumber(name + "_DriveVel", GetDriveVelocity().value());
-    frc::SmartDashboard::PutNumber(name + "_DriveStateVel", state.speed.value());
-    frc::SmartDashboard::PutNumber(name + "_SteerEnc", steerEncoder.GetPosition().GetValue().value() * 360.0);
-
+    frc::SmartDashboard::PutNumber(name + "_DriveStateVelMps", state.speed.value());
+    frc::SmartDashboard::PutNumber(name + "_SteerStateAngDeg", state.angle.Degrees().value());
+    frc::SmartDashboard::PutNumber(name + "_SteerEncAngDeg", steerEncoder.GetPosition().GetValue().value() * 360.0);
+    frc::SmartDashboard::PutNumber(name + "_SteerMotAngDeg", steerMotor.GetPosition().GetValue().value() * 360.0);
 }
 units::voltage::volt_t SwerveModule::GetSupplyVoltage(){
    

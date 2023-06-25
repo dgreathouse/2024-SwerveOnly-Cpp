@@ -52,8 +52,8 @@ void DrivetrainDefaultCommand::Execute()
    frc::SmartDashboard::PutNumber("Y_StickSRL", ySpeed.value());
    frc::SmartDashboard::PutNumber("rot_StickSRL", rotRate.value());
 
-//  m_drivetrain->Drive(xSpeed, ySpeed, rotRate, true);
-  m_drivetrain->Drive(0_mps, 0_mps, 0_rad_per_s, true);
+  m_drivetrain->Drive(xSpeed, ySpeed, rotRate, true);
+  //m_drivetrain->Drive(0_mps, 0_mps, 0_rad_per_s, true);
 }
 
 // Called once the command ends or is interrupted.
