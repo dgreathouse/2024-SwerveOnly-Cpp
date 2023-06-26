@@ -22,25 +22,6 @@ namespace OperatorConstants {
     constexpr int kDriverControllerPort = 0;
 
 }  // namespace OperatorConstants
-namespace kSwerve {
-
-    /********************* Wheel Constants **************************************/
-    constexpr units::meter_t wheelDiameter{0.1029};
-    constexpr units::meter_t wheelCircumference{wheelDiameter * std::numbers::pi};
-
-    /********************* Drive Constants **************************************/
-    constexpr double driveGearRatio = 7.84615;
-    constexpr double driveMotor_MpT = wheelCircumference.value() / driveGearRatio;
-    constexpr units::meters_per_second_t driveMaxSpeed{4.381};
-    constexpr units::meter_t robotWheelDiameter{0.545};
-    constexpr units::meter_t robotWheelCircumference{std::numbers::pi * robotWheelDiameter};
-    constexpr double robotWheelMetersPerRadian = robotWheelCircumference.value() / std::numbers::pi * 2.0;
-    constexpr units::radians_per_second_t robotMaxAngularVelocity{driveMaxSpeed.value() / robotWheelMetersPerRadian};
-    
-    /********************* Steer Constants **************************************/
-    constexpr double steerGearRatio = 15.42857;
-    constexpr double steerDegPTurn = 360.0 / steerGearRatio;// Deg/t Degrees/Motor Turn
-}
 namespace kRobot {
     constexpr units::voltage::volt_t maxBatteryVoltage{12.5};
     constexpr units::time::millisecond_t Period = 20_ms;
@@ -54,4 +35,26 @@ namespace kRobot {
     constexpr double rotStickMax = 0.811;
     constexpr double rotStickMin = -0.875;
 
+}
+namespace kSwerve {
+
+    /********************* Wheel Constants **************************************/
+    constexpr units::meter_t wheelDiameter{0.1029};
+    constexpr units::meter_t wheelCircumference{wheelDiameter * std::numbers::pi};
+
+    /********************* Drive Constants **************************************/
+    constexpr double driveGearRatio = 7.84615;
+    constexpr double driveMotor_MpT = wheelCircumference.value() / driveGearRatio;
+    
+    constexpr double driveMotor_TpM = 1.0/driveMotor_MpT;
+    constexpr units::meters_per_second_t driveMaxSpeed{4.381};
+    constexpr units::meter_t robotWheelDiameter{0.545};
+    constexpr units::meter_t robotWheelCircumference{std::numbers::pi * robotWheelDiameter};
+    constexpr double robotWheelMetersPerRadian = robotWheelCircumference.value() / std::numbers::pi * 2.0;
+    constexpr units::radians_per_second_t robotMaxAngularVelocity{driveMaxSpeed.value() / robotWheelMetersPerRadian};
+    constexpr units::linear_scale driveVpMps = 4.3_V/1.5_mps;
+   // constexpr units::linear_scale driveVpMpsd = kRobot::maxBatteryVoltage/kSwerve::driveMaxSpeed;
+    /********************* Steer Constants **************************************/
+    constexpr double steerGearRatio = 15.42857;
+    constexpr double steerDegPTurn = 360.0 / steerGearRatio;// Deg/t Degrees/Motor Turn
 }

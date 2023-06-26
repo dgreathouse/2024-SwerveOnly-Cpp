@@ -31,7 +31,7 @@ class SwerveModule {
   units::voltage::volt_t GetSupplyVoltage();
   units::velocity::meters_per_second_t GetDriveVelocity();
   void SetDesiredState(const frc::SwerveModuleState& state);
-
+  ctre::phoenixpro::controls::VelocityTorqueCurrentFOC m_driveTrqVel{0_tps, 0_A, 0,false};
 
   private:
   
@@ -47,6 +47,7 @@ class SwerveModule {
   ctre::phoenixpro::controls::VoltageOut steerVoltageOut{0_V};
 
   frc::PIDController m_drivePIDController{0.0,0.0,0};
+  frc::SimpleMotorFeedforward<units::meters> m_driveFeedforward{0_V, 4.3_V / 1.5_mps};
   frc::ProfiledPIDController<units::radians> m_steerPIDController{
     0.10,
     0.0,
@@ -54,6 +55,6 @@ class SwerveModule {
     {kModuleMaxAngularVelocity,kModuleMaxAngularAcceleration},
     kRobot::Period
   };
-  frc::SimpleMotorFeedforward<units::meters> m_driveFeedforward{0_V, 4.3_V / 1.5_mps};
+  
   frc::SimpleMotorFeedforward<units::radians> m_steerFeedforward{0_V, 0.5_V / 1_rad_per_s};
 };
