@@ -31,7 +31,8 @@ class SwerveModule {
   units::voltage::volt_t GetSupplyVoltage();
   units::velocity::meters_per_second_t GetDriveVelocity();
   void SetDesiredState(const frc::SwerveModuleState& state);
-  ctre::phoenixpro::controls::VelocityTorqueCurrentFOC m_driveTrqVel{0_tps, 0_A, 0,false};
+  ctre::phoenixpro::controls::VelocityTorqueCurrentFOC m_driveTrqVel = ctre::phoenixpro::controls::VelocityTorqueCurrentFOC{0_tps, 0_A, 0,false}.WithSlot(0);
+  ctre::phoenixpro::controls::PositionVoltage m_steerPosVolt = ctre::phoenixpro::controls::PositionVoltage{0_tr}.WithSlot(0).WithEnableFOC(true);;
 
   private:
   

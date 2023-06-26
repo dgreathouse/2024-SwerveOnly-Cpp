@@ -29,7 +29,14 @@ SwerveModule::SwerveModule( std::string _name,
     driveConfig.Slot1.kD = 0.001; // A change of 1000 rotation per second squared results in 1 amp output
     driveConfig.TorqueCurrent.PeakForwardTorqueCurrent = 40;  // Peak output of 40 amps
     driveConfig.TorqueCurrent.PeakReverseTorqueCurrent = -40;  // Peak output of 40 amps
-    driveMotor.GetConfigurator().Apply(driveConfig);
+    driveMotor.GetConfigurator().Apply(driveConfig); 
+
+    ctre::phoenixpro::configs::TalonFXConfiguration steerConfig{};
+    steerConfig.Slot0.kP = 24; // An error of 0.5 rotations results in 12 V output
+    steerConfig.Slot0.kI = 0.0;  
+    steerConfig.Slot0.kD = 0.1; // A velocity of 1 rps results in 0.1 V output
+    steerMotor.GetConfigurator().Apply(steerConfig);
+
 }
 units::velocity::meters_per_second_t SwerveModule::GetDriveVelocity()
 {
@@ -80,16 +87,21 @@ void SwerveModule::SetDesiredState(const frc::SwerveModuleState& desiredState)
     // Calculate the steer output based on current state and desired state
     // This is a Position PID
     // PID numbers need to be normalized
-    units::voltage::volt_t steerOutput = m_steerPIDController.Calculate(units::radian_t{units::degree_t{steerMotor.GetPosition().GetValue().value() * kSwerve::steerDegPTurn}}, state.angle.Radians()) * kRobot::maxBatteryVoltage;
+   // units::voltage::volt_t steerOutput = m_steerPIDController.Calculate(units::radian_t{units::degree_t{steerMotor.GetPosition().GetValue().value() * kSwerve::steerDegPTurn}}, state.angle.Radians()) * kRobot::maxBatteryVoltage;
 
     // Calculate the steer feed forward based on the steerPID desired velocity
     // kA, kV need to calculate voltate from speed 
-    units::voltage::volt_t steerFeedForward = m_steerFeedforward.Calculate(m_steerPIDController.GetSetpoint().velocity);
+   // units::voltage::volt_t steerFeedForward = m_steerFeedforward.Calculate(m_steerPIDController.GetSetpoint().velocity);
+    // Set the steer position
+    units::turn_t steerPos{state.angle.Degrees().value() * kSwerve::steerTpDeg};
+    steerMotor.SetControl(m_steerPosVolt.WithPosition(steerPos));
 
-    // Set the drive voltage
+
+    // Set the drive velocity
     units::turns_per_second_t driveSpeed{state.speed.value() * kSwerve::driveMotor_TpM};
-    //driveMotor.SetControl(driveVoltageOut.WithEnableFOC(true).WithOverrideBrakeDurNeutral(false).WithOutput(driveFeedForward + driveOutput));
     driveMotor.SetControl(m_driveTrqVel.WithVelocity(driveSpeed));
+    //driveMotor.SetControl(driveVoltageOut.WithEnableFOC(true).WithOverrideBrakeDurNeutral(false).WithOutput(driveFeedForward + driveOutput));
+    
     // Set the steer voltage
     //steerMotor.SetControl(steerVoltageOut.WithEnableFOC(true).WithOverrideBrakeDurNeutral(false).WithOutput(steerFeedForward + steerOutput));
 
@@ -98,8 +110,8 @@ void SwerveModule::SetDesiredState(const frc::SwerveModuleState& desiredState)
     frc::SmartDashboard::PutNumber(name + "_DriveVel", GetDriveVelocity().value());
     frc::SmartDashboard::PutNumber(name + "_DriveStateVelMps", state.speed.value());
     
-    frc::SmartDashboard::PutNumber(name + "_SteerFF", steerFeedForward.value());
-    frc::SmartDashboard::PutNumber(name + "_SteerPID", steerOutput.value());
+   // frc::SmartDashboard::PutNumber(name + "_SteerFF", steerFeedForward.value());
+  //  frc::SmartDashboard::PutNumber(name + "_SteerPID", steerOutput.value());
     frc::SmartDashboard::PutNumber(name + "_SteerStateAngDeg", state.angle.Degrees().value());
     frc::SmartDashboard::PutNumber(name + "_SteerEncAngDeg", steerEncoder.GetPosition().GetValue().value() * 360.0);
     frc::SmartDashboard::PutNumber(name + "_SteerMotAngDeg", steerMotor.GetPosition().GetValue().value() * 360.0);
