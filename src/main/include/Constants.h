@@ -57,4 +57,5 @@ namespace kSwerve {
     /********************* Steer Constants **************************************/
     constexpr double steerGearRatio = 15.42857;
     constexpr double steerDegPTurn = 360.0 / steerGearRatio;// Deg/t Degrees/Motor Turn
+    constexpr double steerTpDeg = steerGearRatio / 360.0;// turn/deg Degrees/Motor Turn
 }
