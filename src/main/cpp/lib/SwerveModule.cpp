@@ -21,8 +21,7 @@ SwerveModule::SwerveModule( std::string _name,
     
 {
     m_steerPIDController.EnableContinuousInput(-units::radian_t{std::numbers::pi}, units::radian_t{std::numbers::pi});
-    driveMotor.SetInverted(_driveReversed);
-    steerMotor.SetInverted(_steerReversed);
+
     ctre::phoenixpro::configs::TalonFXConfiguration driveConfig{};
     driveConfig.Slot0.kP = 5; // An error of 1 rotation per second results in 5 amps output
     driveConfig.Slot1.kI = 0.1; // An error of 1 rotation per second increases output by 0.1 amps every second
@@ -32,11 +31,13 @@ SwerveModule::SwerveModule( std::string _name,
     driveMotor.GetConfigurator().Apply(driveConfig); 
 
     ctre::phoenixpro::configs::TalonFXConfiguration steerConfig{};
-    steerConfig.Slot0.kP = 24; // An error of 0.5 rotations results in 12 V output
+    steerConfig.Slot0.kP = 12; // An error of 0.5 rotations results in 12 V output
     steerConfig.Slot0.kI = 0.0;  
     steerConfig.Slot0.kD = 0.1; // A velocity of 1 rps results in 0.1 V output
+    //steerConfig.MotorOutput.Inverted = ctre::phoenixpro::signals::InvertedValue::CounterClockwise_Positive;
     steerMotor.GetConfigurator().Apply(steerConfig);
-
+    driveMotor.SetInverted(_driveReversed);
+    steerMotor.SetInverted(_steerReversed);
 }
 units::velocity::meters_per_second_t SwerveModule::GetDriveVelocity()
 {
@@ -93,12 +94,14 @@ void SwerveModule::SetDesiredState(const frc::SwerveModuleState& desiredState)
     // kA, kV need to calculate voltate from speed 
    // units::voltage::volt_t steerFeedForward = m_steerFeedforward.Calculate(m_steerPIDController.GetSetpoint().velocity);
     // Set the steer position
+    //units::turn_t steerPos{30.0 * kSwerve::steerTpDeg};
     units::turn_t steerPos{state.angle.Degrees().value() * kSwerve::steerTpDeg};
     steerMotor.SetControl(m_steerPosVolt.WithPosition(steerPos));
 
 
     // Set the drive velocity
     units::turns_per_second_t driveSpeed{state.speed.value() * kSwerve::driveMotor_TpM};
+    //units::turns_per_second_t driveSpeed{kSwerve::driveMaxSpeed.value()/10.0 * kSwerve::driveMotor_TpM};
     driveMotor.SetControl(m_driveTrqVel.WithVelocity(driveSpeed));
     //driveMotor.SetControl(driveVoltageOut.WithEnableFOC(true).WithOverrideBrakeDurNeutral(false).WithOutput(driveFeedForward + driveOutput));
     
@@ -114,7 +117,7 @@ void SwerveModule::SetDesiredState(const frc::SwerveModuleState& desiredState)
   //  frc::SmartDashboard::PutNumber(name + "_SteerPID", steerOutput.value());
     frc::SmartDashboard::PutNumber(name + "_SteerStateAngDeg", state.angle.Degrees().value());
     frc::SmartDashboard::PutNumber(name + "_SteerEncAngDeg", steerEncoder.GetPosition().GetValue().value() * 360.0);
-    frc::SmartDashboard::PutNumber(name + "_SteerMotAngDeg", steerMotor.GetPosition().GetValue().value() * 360.0);
+    frc::SmartDashboard::PutNumber(name + "_SteerMotAngDeg", (steerMotor.GetPosition().GetValue().value() * 360.0)/kSwerve::steerGearRatio);
 }
 units::voltage::volt_t SwerveModule::GetSupplyVoltage(){
    

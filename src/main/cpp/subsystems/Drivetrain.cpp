@@ -8,6 +8,7 @@
 #include "units/length.h"
 
 
+
   Drivetrain::Drivetrain() 
    :  fl{"fl",13,23,3,true,false,151.857_deg},
       fr{"fr",12,22,2,true,true,286.523_deg},
@@ -23,6 +24,7 @@
 // This method will be called once per scheduler run
 void Drivetrain::Periodic() {
     UpdateOdometry();
+    //frc::SmartDashboard::PutNumber("RobotAngle", gyro.GetAngle());
 }
 bool Drivetrain::BusActive(){
    if(fl.GetSupplyVoltage().value() > 4.5 && fr.GetSupplyVoltage().value() > 4.5 && b.GetSupplyVoltage().value() > 4.5){
@@ -31,9 +33,10 @@ bool Drivetrain::BusActive(){
    return false;
 }
 void Drivetrain::Drive(units::meters_per_second_t _xSpeed, units::meters_per_second_t _ySpeed, units::radians_per_second_t _rotSpeed, bool _fieldRelative){
+   units::radians_per_second_t rot = CalcRobotAngle(45_deg, gyro.GetYaw().GetValue());
    wpi::array<frc::SwerveModuleState, 3U> states = m_kinematics.ToSwerveModuleStates(
-      _fieldRelative ? frc::ChassisSpeeds::FromFieldRelativeSpeeds(_xSpeed, _ySpeed, _rotSpeed, gyro.GetRotation2d())
-                     : frc::ChassisSpeeds(_xSpeed, _ySpeed, _rotSpeed));
+      _fieldRelative ? frc::ChassisSpeeds::FromFieldRelativeSpeeds(_xSpeed, _ySpeed, rot, gyro.GetRotation2d())
+                     : frc::ChassisSpeeds(_xSpeed, _ySpeed, rot));
 
    m_kinematics.DesaturateWheelSpeeds(&states, kSwerve::driveMaxSpeed);
 
@@ -51,6 +54,15 @@ void Drivetrain::UpdateOdometry() {
    frc::SmartDashboard::PutNumber("RobotAngle", gyro.GetYaw().GetValue().value());
 
 }
+units::radians_per_second_t Drivetrain::CalcRobotAngle(units::degree_t _desiredAngle, units::degree_t _currentAngle)
+{
+   double pidOutput = -m_robotAnglePIDController.Calculate(_desiredAngle, _currentAngle);
+   double pidFF = -m_robotAngleFeedforward.Calculate(m_robotAnglePIDController.GetSetpoint().velocity).value();
+   frc::SmartDashboard::PutNumber("RobotAnglePIDOutput", pidOutput);
+   frc::SmartDashboard::PutNumber("RobotAngleFF", pidFF);
+   return units::radians_per_second_t{pidOutput + pidFF};
+}
+
 frc::Pose2d Drivetrain::GetRobotPose(){
    return m_odometery.GetPose();
 }
