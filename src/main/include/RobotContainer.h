@@ -24,7 +24,7 @@ class RobotContainer
 {
 public:
   RobotContainer();
-  frc::Joystick driverStick{0};
+  frc::Joystick driverStick{ OperatorConstants::kDriverControllerPort};
   frc::SendableChooser<frc2::Command*> m_autoChooser;
   frc2::Command* GetAutonomousCommand();
   

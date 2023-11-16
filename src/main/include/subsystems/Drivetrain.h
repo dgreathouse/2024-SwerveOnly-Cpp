@@ -20,7 +20,7 @@ class Drivetrain : public frc2::SubsystemBase {
  public:
   
   Drivetrain();
-  void Drive(units::meters_per_second_t _xSpeed, units::meters_per_second_t _ySpeed, units::radians_per_second_t _rot, bool _fieldRelative);
+  void Drive(units::meters_per_second_t _xSpeed, units::meters_per_second_t _ySpeed, units::radians_per_second_t _rot, bool _fieldRelative, bool _angleBasedRotation);
   void UpdateOdometry();
   units::radians_per_second_t CalcRobotAngle(units::degree_t _desiredAngle, units::degree_t _currentAngle);
   bool BusActive();

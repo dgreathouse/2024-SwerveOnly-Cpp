@@ -24,9 +24,9 @@ void AutoDrivetrainDriveStraight::Initialize() {
 void AutoDrivetrainDriveStraight::Execute() {
   if(m_drive->GetRobotPose().X().operator>=(m_distance)){
     isFinished = true;
-    m_drive->Drive(0_mps, 0_mps, 0_rad_per_s,true);
+    m_drive->Drive(0_mps, 0_mps, 0_rad_per_s,true,true);
   }else {
-    m_drive->Drive(m_speed, 0_mps, 0_rad_per_s,true);
+    m_drive->Drive(m_speed, 0_mps, 0_rad_per_s,true,true);
   }
  // const char* s = m_speed.abbreviation();
   // if( m_drive->GetRobotPose().X().value() > m_distance.value()) {

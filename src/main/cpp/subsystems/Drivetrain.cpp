@@ -32,8 +32,11 @@ bool Drivetrain::BusActive(){
    }
    return false;
 }
-void Drivetrain::Drive(units::meters_per_second_t _xSpeed, units::meters_per_second_t _ySpeed, units::radians_per_second_t _rotSpeed, bool _fieldRelative){
-   units::radians_per_second_t rot = CalcRobotAngle(45_deg, gyro.GetYaw().GetValue());
+void Drivetrain::Drive(units::meters_per_second_t _xSpeed, units::meters_per_second_t _ySpeed, units::radians_per_second_t _rotSpeed, bool _fieldRelative, bool _angleBasedRotation){
+   units::radians_per_second_t rot = 
+   _angleBasedRotation ? CalcRobotAngle(45_deg, gyro.GetYaw().GetValue()) 
+                       : _rotSpeed;
+
    wpi::array<frc::SwerveModuleState, 3U> states = m_kinematics.ToSwerveModuleStates(
       _fieldRelative ? frc::ChassisSpeeds::FromFieldRelativeSpeeds(_xSpeed, _ySpeed, rot, gyro.GetRotation2d())
                      : frc::ChassisSpeeds(_xSpeed, _ySpeed, rot));

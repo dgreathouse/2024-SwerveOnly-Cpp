@@ -3,12 +3,11 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #pragma once
+#include <string.h>
 #include <units/angle.h>
 #include <frc/kinematics/SwerveModuleState.h>
 #include <frc/kinematics/SwerveModulePosition.h>
 #include <frc/kinematics/ChassisSpeeds.h>
-#include <frc/controller/PIDController.h>
-#include <frc/controller/ProfiledPIDController.h>
 #include <units/acceleration.h>
 #include <units/angular_acceleration.h>
 #include <units/angle.h>
@@ -18,11 +17,11 @@
 #include "ctre/phoenixpro/TalonFX.hpp"
 #include "ctre/phoenixpro/CANcoder.hpp"
 #include "ctre/phoenixpro/Pigeon2.hpp"
-#include <frc/controller/SimpleMotorFeedforward.h>
 #include "Constants.h"
 #include <frc/smartdashboard/SmartDashboard.h>
-#include <string.h>
-
+#include <frc/controller/PIDController.h>
+#include <frc/controller/ProfiledPIDController.h>
+#include <frc/controller/SimpleMotorFeedforward.h>
 class SwerveModule {
   public:
   SwerveModule(std::string _name, int _driveCANId, int _steerCANID, int _canCoderCANID, bool _steerReversed, bool _driveReversed, units::degree_t _steerOffset);
